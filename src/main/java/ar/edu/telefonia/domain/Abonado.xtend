@@ -1,7 +1,9 @@
 package ar.edu.telefonia.domain
 
 import java.beans.Transient
+import java.math.BigDecimal
 import java.util.ArrayList
+import java.util.Date
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.uqbar.commons.model.UserException
@@ -25,6 +27,10 @@ abstract class Abonado implements Cloneable {
 		super.clone as Abonado
 	}
 
+	override toString() {
+		nombre + " (" + id + ") - " 	
+	}
+	
 	abstract def float costo(Llamada llamada)
 
 	def esMoroso() {
@@ -41,6 +47,15 @@ abstract class Abonado implements Cloneable {
 
 	def agregarFactura(Factura factura) {
 		facturas.add(factura)
+	}
+	
+	def facturar(int unMonto) {
+		this.agregarFactura(new Factura => [
+			fecha = new Date
+			total = new BigDecimal(unMonto)
+			totalPagado = new BigDecimal(0)
+		])
+		this
 	}
 	
 	@Transient

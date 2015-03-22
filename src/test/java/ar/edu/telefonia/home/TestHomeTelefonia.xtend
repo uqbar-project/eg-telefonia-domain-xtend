@@ -1,5 +1,6 @@
 package ar.edu.telefonia.home
 
+import ar.edu.telefonia.appModel.BusquedaAbonados
 import ar.edu.telefonia.domain.Abonado
 import ar.edu.telefonia.domain.Empresa
 import ar.edu.telefonia.domain.Factura
@@ -22,7 +23,7 @@ class TestHomeTelefonia {
 	def void init() {
 		homeTelefonia = HomeTelefonia.instance
 		
-		walterWhite = new Residencial() => [
+		walterWhite = new Residencial => [
 			nombre = "Walter White"
 			numero = "46710080"
 			agregarFactura(new Factura(new Date(10, 1, 109), 500, 240))
@@ -40,9 +41,9 @@ class TestHomeTelefonia {
 			numero = "47609272"
 		]
 
-		createIfNotExists(jessePinkman)
-		val existeIBM = createIfNotExists(ibm)
-		val existeWalterWhite = createIfNotExists(walterWhite)
+		homeTelefonia.createIfNotExists(jessePinkman)
+		val existeIBM = homeTelefonia.createIfNotExists(ibm)
+		val existeWalterWhite = homeTelefonia.createIfNotExists(walterWhite)
 
 		jessePinkman = homeTelefonia.getAbonado(jessePinkman)
 		ibm = homeTelefonia.getAbonado(ibm)
@@ -62,14 +63,6 @@ class TestHomeTelefonia {
 		}
 	}
 
-	def createIfNotExists(Abonado abonado) {
-		val existe = homeTelefonia.getAbonado(abonado) != null
-		if (!existe) {
-			homeTelefonia.actualizarAbonado(abonado)
-		}
-		existe
-	}
-
 	@Test
 	def void walterWhiteTiene2Llamadas() {
 		var walterWhiteBD = homeTelefonia.getAbonado(walterWhite)
@@ -87,6 +80,28 @@ class TestHomeTelefonia {
 	def void walterWhiteCostoDeLlamada1() {
 		val walterWhiteBD = homeTelefonia.getAbonado(walterWhite)
 		Assert.assertEquals(20, walterWhiteBD.costo(llamada1), 0.1)
+	}
+
+	@Test
+	def void walterWhiteSaleEnLaListaDeMorosos() {
+		val result = homeTelefonia.getAbonados(buildBusquedaSoloMorosos).map [ it.id ]
+		val idWalterWhite = homeTelefonia.getAbonado(walterWhite).id
+		Assert.assertTrue(result.contains(idWalterWhite))
+	}
+
+	@Test
+	def void jessePinkmanNoSaleEnLaListaDeMorosos() {
+		val busquedaAbonados = buildBusquedaSoloMorosos()
+		val result = homeTelefonia.getAbonados(busquedaAbonados)
+		val jessePinkmanBD = homeTelefonia.getAbonado(jessePinkman)
+		Assert.assertFalse(result.contains(jessePinkmanBD))
+	}
+	
+	def buildBusquedaSoloMorosos() {
+		val busquedaAbonados = new BusquedaAbonados => [
+			soloMorosos = true
+		]
+		busquedaAbonados
 	}
 
 }

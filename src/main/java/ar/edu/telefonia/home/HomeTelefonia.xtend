@@ -2,7 +2,9 @@ package ar.edu.telefonia.home
 
 import ar.edu.telefonia.appModel.BusquedaAbonados
 import ar.edu.telefonia.domain.Abonado
-import java.util.ArrayList
+import ar.edu.telefonia.domain.Empresa
+import ar.edu.telefonia.domain.Residencial
+import ar.edu.telefonia.domain.Rural
 import java.util.List
 
 class HomeTelefonia {
@@ -12,7 +14,11 @@ class HomeTelefonia {
 	private static HomeTelefonia instance = null
 	
 	private new() {
-		abonados = new ArrayList<Abonado>
+		abonados = newArrayList
+		createIfNotExists(createResidencial("RE10204", "Claudio Masferrer"))
+		createIfNotExists(createResidencial("RE01558", "Sonia Guzman"))
+		createIfNotExists(createRural("RU219BA", "Joaquin Bartomeo", 300).facturar(540))
+		createIfNotExists(createEmpresa("EM7762NA", "Rivara SA", "30-60119164-0").facturar(1200)) 
 	}
 	
 	static def getInstance() {
@@ -47,7 +53,8 @@ class HomeTelefonia {
 		abonado.validar
 		if (abonado.id == null) {
 			// es un alta
-			abonado.id = abonados.fold(0l, [ max, unAbonado | Math.max(max, unAbonado.id) ]) + 1
+			val maxId = abonados.fold(0l, [ max, unAbonado | Math.max(max, unAbonado.id) ])
+			abonado.id = maxId + 1
 			abonados.add(abonado)
 		} else {
 			// es una modificación
@@ -58,6 +65,41 @@ class HomeTelefonia {
 	
 	def eliminarAbonado(Abonado abonado) {
 		abonados.remove(doGetAbonado(abonado))
+	}
+
+	/** ***********************************************
+	 *  METODOS CREACIONALES
+	 *  ***********************************************
+	 */
+	def createResidencial(String unNumero, String unNombre) {
+		new Residencial => [
+			numero = unNumero
+			nombre = unNombre 
+		]
+	}
+
+	def createRural(String unNumero, String unNombre, int cuantasHectareas) {
+		new Rural => [
+			numero = unNumero
+			nombre = unNombre
+			cantidadHectareas = cuantasHectareas 
+		]
+	}
+
+	def createEmpresa(String unNumero, String unNombre, String unCuit) {
+		new Empresa => [
+			numero = unNumero
+			nombre = unNombre
+			cuit = unCuit 
+		]
+	}
+
+	def createIfNotExists(Abonado abonado) {
+		val existe = this.getAbonado(abonado) != null
+		if (!existe) {
+			this.actualizarAbonado(abonado)
+		}
+		existe
 	}
 
 }
