@@ -26,8 +26,8 @@ class TestHomeTelefonia {
 		walterWhite = new Residencial => [
 			nombre = "Walter White"
 			numero = "46710080"
-			agregarFactura(new Factura(new Date(10, 1, 109), 500, 240))
-			agregarFactura(new Factura(new Date(10, 1, 111), 1200, 600))
+			agregarFactura(new Factura(new Date(10, 1, 109), 500, 740))
+			agregarFactura(new Factura(new Date(10, 1, 111), 1200, 1800))
 		]
 
 		jessePinkman = new Rural(100) => [
@@ -73,7 +73,7 @@ class TestHomeTelefonia {
 	@Test
 	def void deudaDeWalterWhite() {
 		val walterWhiteBD = homeTelefonia.getAbonado(walterWhite)
-		Assert.assertEquals(860, walterWhiteBD.deuda, 0.1)
+		Assert.assertEquals(840, walterWhiteBD.deuda, 0.1)
 	}
 
 	@Test

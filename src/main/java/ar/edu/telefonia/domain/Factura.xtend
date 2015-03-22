@@ -25,7 +25,7 @@ class Factura {
 	}
 
 	def saldo() { 
-		totalPagado.subtract(total)
+		total.subtract(totalPagado).abs
 	}
 	
 }
