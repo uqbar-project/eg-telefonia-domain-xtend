@@ -32,7 +32,7 @@ class BuscarAbonadoAppModel {
 	
 	def void limpiar() {
 		busquedaAbonados.clear()
-		abonados.clear()
+		abonados = new ArrayList<Abonado>
 		abonadoSeleccionado = null
 	}
 	

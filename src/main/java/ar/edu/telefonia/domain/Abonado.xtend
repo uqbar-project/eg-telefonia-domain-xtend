@@ -82,6 +82,16 @@ abstract class Abonado implements Cloneable {
 	def min(Integer integer, Integer integer2) {
 		max(integer2, integer)
 	}
+	
+	def void reemplazarCon(Abonado abonado) {
+		nombre = abonado.nombre
+		numero = abonado.numero
+		facturas = abonado.facturas
+		llamadas = abonado.llamadas
+		this.doReemplazarCon(abonado)
+	}
+	
+	abstract def void doReemplazarCon(Abonado abonado)
 
 }
 
@@ -94,6 +104,10 @@ class Residencial extends Abonado {
 	@Transient
 	override getDatosEspecificos() {
 		"Residencial"
+	}
+	
+	override doReemplazarCon(Abonado abonado) {
+		
 	}
 
 }
@@ -138,6 +152,12 @@ class Rural extends Abonado {
 	override getDatosEspecificos() {
 		"Rural (" + cantidadHectareas + " has)"
 	}
+	
+	override doReemplazarCon(Abonado abonado) {
+		val otro = abonado as Rural
+		cantidadHectareas = otro.cantidadHectareas	
+	}
+	
 }
 
 class Empresa extends Abonado {
@@ -173,6 +193,7 @@ class Empresa extends Abonado {
 	override getDatosEspecificos() {
 		"Empresa (" + cuit + ")"
 	}	
+	
 	new(String unCuit) {
 		cuit = unCuit
 	}
@@ -183,6 +204,11 @@ class Empresa extends Abonado {
 
 	override def esMoroso() {
 		facturas.size > 3
+	}
+
+	override doReemplazarCon(Abonado abonado) {
+		val otro = abonado as Empresa
+		cuit = otro.cuit	
 	}
 
 }

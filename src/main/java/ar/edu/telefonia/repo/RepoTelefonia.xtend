@@ -29,7 +29,7 @@ class RepoTelefonia {
 	}
 	
 	def doGetAbonado(Abonado abonado) {
-		abonados.findFirst [ it.nombre.equalsIgnoreCase(abonado.nombre)]
+		abonados.findFirst [ it.id.equals(abonado.id)]
 	}
 
 	/** Genero una copia del objeto para no actualizar el que referencia el repo **/
@@ -58,8 +58,8 @@ class RepoTelefonia {
 			abonados.add(abonado)
 		} else {
 			// es una modificación
-			var abonadoPosta = doGetAbonado(abonado)
-			abonadoPosta = abonado
+			val abonadoPosta = doGetAbonado(abonado)
+			abonadoPosta.reemplazarCon(abonado)
 		}
 	}
 	
