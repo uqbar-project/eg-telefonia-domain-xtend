@@ -1,12 +1,19 @@
 package ar.edu.telefonia.appModel
 
 import ar.edu.telefonia.domain.Abonado
-import ar.edu.telefonia.home.HomeTelefonia
 import java.util.ArrayList
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.uqbar.commons.utils.Observable
+import ar.edu.telefonia.repo.RepoTelefonia
 
+/**
+ * Modelo de la vista de la búsqueda de abonados
+ * Pero como no es un componente que dependa de la tecnología
+ * de UI, sino que modela el caso de uso, lo ubicamos en este
+ * proyecto. De esa manera todos los fwk de UI que soporten
+ * binding bidireccional pueden aprovechar este componente.
+ */
 @Observable
 @Accessors
 class BuscarAbonadoAppModel {
@@ -20,7 +27,7 @@ class BuscarAbonadoAppModel {
 	}
 	
 	def void buscar() {
-		abonados = HomeTelefonia.instance.getAbonados(busquedaAbonados)
+		abonados = RepoTelefonia.instance.getAbonados(busquedaAbonados)
 	}
 	
 	def void limpiar() {
@@ -30,7 +37,7 @@ class BuscarAbonadoAppModel {
 	}
 	
 	def eliminarAbonado() {
-		HomeTelefonia.instance.eliminarAbonado(abonadoSeleccionado)
+		RepoTelefonia.instance.eliminarAbonado(abonadoSeleccionado)
 		this.buscar
 	}
 	

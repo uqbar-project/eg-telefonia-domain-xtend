@@ -1,4 +1,4 @@
-package ar.edu.telefonia.home
+package ar.edu.telefonia.repo
 
 import ar.edu.telefonia.appModel.BusquedaAbonados
 import ar.edu.telefonia.domain.Abonado
@@ -7,11 +7,11 @@ import ar.edu.telefonia.domain.Residencial
 import ar.edu.telefonia.domain.Rural
 import java.util.List
 
-class HomeTelefonia {
+class RepoTelefonia {
 
 	List<Abonado> abonados
 	
-	private static HomeTelefonia instance = null
+	private static RepoTelefonia instance = null
 	
 	private new() {
 		abonados = newArrayList
@@ -23,7 +23,7 @@ class HomeTelefonia {
 	
 	static def getInstance() {
 		if (instance == null) {
-			instance = new HomeTelefonia
+			instance = new RepoTelefonia
 		}
 		instance
 	}
@@ -32,7 +32,7 @@ class HomeTelefonia {
 		abonados.findFirst [ it.nombre.equalsIgnoreCase(abonado.nombre)]
 	}
 
-	/** Genero una copia del objeto para no actualizar el que referencia el home **/
+	/** Genero una copia del objeto para no actualizar el que referencia el repo **/
 	def getAbonado(Abonado abonado) {
 		val result = doGetAbonado(abonado)
 		if (result == null) {
@@ -42,7 +42,7 @@ class HomeTelefonia {
 		} 
 	}
 
-	/** Genero una copia de los objetos para no actualizar el que referencia el home **/
+	/** Genero una copia de los objetos para no actualizar el que referencia el repo **/
 	def List<Abonado> getAbonados(BusquedaAbonados busquedaAbonados) {
 		val copiaDeAbonados = abonados.map [ it.copy ]
 		val abonadosFiltrados = copiaDeAbonados.filter [ busquedaAbonados.cumple(it) ].toList

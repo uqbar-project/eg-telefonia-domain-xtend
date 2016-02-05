@@ -1,4 +1,4 @@
-package ar.edu.telefonia.home
+package ar.edu.telefonia.repo
 
 import ar.edu.telefonia.appModel.BusquedaAbonados
 import ar.edu.telefonia.domain.Abonado
@@ -12,16 +12,16 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-class TestHomeTelefonia {
+class TestRepoTelefonia {
 
 	Abonado walterWhite
 	Abonado jessePinkman
-	HomeTelefonia homeTelefonia 
+	RepoTelefonia repoTelefonia 
 	Llamada llamada1 = new Llamada(walterWhite, jessePinkman, 10)
 
 	@Before
 	def void init() {
-		homeTelefonia = HomeTelefonia.instance
+		repoTelefonia = RepoTelefonia.instance
 		
 		walterWhite = new Residencial => [
 			nombre = "Walter White"
@@ -41,59 +41,59 @@ class TestHomeTelefonia {
 			numero = "47609272"
 		]
 
-		homeTelefonia.createIfNotExists(jessePinkman)
-		val existeIBM = homeTelefonia.createIfNotExists(ibm)
-		val existeWalterWhite = homeTelefonia.createIfNotExists(walterWhite)
+		repoTelefonia.createIfNotExists(jessePinkman)
+		val existeIBM = repoTelefonia.createIfNotExists(ibm)
+		val existeWalterWhite = repoTelefonia.createIfNotExists(walterWhite)
 
-		jessePinkman = homeTelefonia.getAbonado(jessePinkman)
-		ibm = homeTelefonia.getAbonado(ibm)
-		walterWhite = homeTelefonia.getAbonado(walterWhite)
+		jessePinkman = repoTelefonia.getAbonado(jessePinkman)
+		ibm = repoTelefonia.getAbonado(ibm)
+		walterWhite = repoTelefonia.getAbonado(walterWhite)
 
 		// El update lo tenemos que hacer por separado por las referencias circulares
 		if (!existeWalterWhite) {
 			var Llamada llamada2 = new Llamada(walterWhite, ibm, 2)
 			walterWhite.agregarLlamada(llamada1)
 			walterWhite.agregarLlamada(llamada2)
-			homeTelefonia.actualizarAbonado(walterWhite)
+			repoTelefonia.actualizarAbonado(walterWhite)
 		}
 
 		if (!existeIBM) {
 			ibm.agregarLlamada(new Llamada(ibm, jessePinkman, 5))
-			homeTelefonia.actualizarAbonado(ibm)
+			repoTelefonia.actualizarAbonado(ibm)
 		}
 	}
 
 	@Test
 	def void walterWhiteTiene2Llamadas() {
-		var walterWhiteBD = homeTelefonia.getAbonado(walterWhite)
+		var walterWhiteBD = repoTelefonia.getAbonado(walterWhite)
 		var llamadasDeWalterWhite = walterWhiteBD.llamadas
 		Assert.assertEquals(2, llamadasDeWalterWhite.size)
 	}
 
 	@Test
 	def void deudaDeWalterWhite() {
-		val walterWhiteBD = homeTelefonia.getAbonado(walterWhite)
+		val walterWhiteBD = repoTelefonia.getAbonado(walterWhite)
 		Assert.assertEquals(840, walterWhiteBD.deuda, 0.1)
 	}
 
 	@Test
 	def void walterWhiteCostoDeLlamada1() {
-		val walterWhiteBD = homeTelefonia.getAbonado(walterWhite)
+		val walterWhiteBD = repoTelefonia.getAbonado(walterWhite)
 		Assert.assertEquals(20, walterWhiteBD.costo(llamada1), 0.1)
 	}
 
 	@Test
 	def void walterWhiteSaleEnLaListaDeMorosos() {
-		val result = homeTelefonia.getAbonados(buildBusquedaSoloMorosos).map [ it.id ]
-		val idWalterWhite = homeTelefonia.getAbonado(walterWhite).id
+		val result = repoTelefonia.getAbonados(buildBusquedaSoloMorosos).map [ it.id ]
+		val idWalterWhite = repoTelefonia.getAbonado(walterWhite).id
 		Assert.assertTrue(result.contains(idWalterWhite))
 	}
 
 	@Test
 	def void jessePinkmanNoSaleEnLaListaDeMorosos() {
 		val busquedaAbonados = buildBusquedaSoloMorosos()
-		val result = homeTelefonia.getAbonados(busquedaAbonados)
-		val jessePinkmanBD = homeTelefonia.getAbonado(jessePinkman)
+		val result = repoTelefonia.getAbonados(busquedaAbonados)
+		val jessePinkmanBD = repoTelefonia.getAbonado(jessePinkman)
 		Assert.assertFalse(result.contains(jessePinkmanBD))
 	}
 	
