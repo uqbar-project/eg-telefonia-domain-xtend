@@ -3,7 +3,7 @@ package ar.edu.telefonia.domain
 import java.math.BigDecimal
 import java.util.Date
 import org.eclipse.xtend.lib.annotations.Accessors
-import org.uqbar.commons.utils.Observable
+import org.uqbar.commons.model.annotations.Observable
 
 @Observable
 @Accessors
@@ -13,7 +13,7 @@ class Factura {
 	private BigDecimal totalPagado
 	private BigDecimal total
 
-	/** Constructor que necesita Hibernate */	
+	/** Constructor que necesitan algunos frameworks */	
 	new() {
 		
 	}

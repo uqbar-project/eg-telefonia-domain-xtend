@@ -6,8 +6,8 @@ import java.util.ArrayList
 import java.util.Date
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
-import org.uqbar.commons.model.UserException
-import org.uqbar.commons.utils.Observable
+import org.uqbar.commons.model.annotations.Observable
+import org.uqbar.commons.model.exceptions.UserException
 
 @Observable
 @Accessors
